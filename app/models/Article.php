@@ -30,7 +30,7 @@
     // Add Post
     public function postArticle($data){
       // Prepare Query
-      $this->db->query('INSERT INTO artiles (title, user_id, body) VALUES (:title, :user_id, :body)');
+        $this->db->query('INSERT INTO `articles` (title, user_id, body) VALUES (:title, :user_id, :body)');
 
       // Bind Values
       $this->db->bind(':title', $data['title']);

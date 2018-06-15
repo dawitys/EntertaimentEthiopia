@@ -1,5 +1,7 @@
 <?php
-  class Article {
+
+class Forum
+{
     public $title;
     public $catagory;
     private $thoughts;
@@ -16,12 +18,33 @@
     }
 
     // add a participant to a forum
-    public function addParticipant($thought){
+    public function addParticipant($participant)
+    {
       //implementation based on database
     }
     // add a thought to a forum
-    public function updateFourm($title){
+    public function updateForum($title)
+    {
       //implementation based on database
+    }
+
+    // Update Post
+    public function updateForum($data)
+    {
+        // Prepare Query
+        $this->db->query('UPDATE forums SET title = :title, body = :body WHERE id = :id;');
+
+        // Bind Values
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':title', $data['title']);
+        $this->db->bind(':body', $data['body']);
+
+        //Execute
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getAllForums(){
@@ -60,25 +83,6 @@
         return false;
       }
     }
-
-    // Update Post
-    public function updateArticle($data){
-      // Prepare Query
-      $this->db->query('UPDATE articles SET title = :title, body = :body WHERE id = :id;');
-
-      // Bind Values
-      $this->db->bind(':id', $data['id']);
-      $this->db->bind(':title', $data['title']);
-      $this->db->bind(':body', $data['body']);
-      
-      //Execute
-      if($this->db->execute()){
-        return true;
-      } else {
-        return false;
-      }
-    }
-
     // Delete Post
     public function deleteArticle($id){
       // Prepare Query

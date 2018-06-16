@@ -19,23 +19,6 @@ class Database
             self::$ins = new Database;
         }
         return self::$ins;
-
-        // if (!isset(self::$dbh)) {
-        //     // Set DSN
-        //     $dsn = 'mysql:host=' . self::$host . ';dbname=' . self::$dbname;
-        //     $options = array (
-        //         PDO::ATTR_PERSISTENT => true,
-        //         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        //     );
-
-        //     // Create a new PDO instanace
-        //     try {
-        //         self::$dbh = new PDO ($dsn, self::$user, self::$pass, $options);
-        //     }		// Catch any errors
-        //     catch ( PDOException $e ) {
-        //         $this->error = $e->getMessage();
-        //     }}
-        // return self::$dbh;
     }
 
     public function __construct()
@@ -117,11 +100,11 @@ class Database
 }
   class Article {
       public $id;
-    public $title;
-    public $content;
+      public $title;
+      public $content;
       public $catagory;
-    public $importance;
-    public $releaseDate;
+      public $importance;
+      public $releaseDate;
       public $source;
 
       // private static $db;
@@ -137,8 +120,8 @@ class Database
           $this->source = $source;
 
 //      Database::getInstance()= Database::getInstance();
-          echo "creat Art";
-    }
+//          echo "created Article";
+      }
 
     // Get All Articles
       public static function getAllArticles()
@@ -161,8 +144,8 @@ class Database
           Database::getInstance()->bind(':title', $data['title']);
           $article = Database::getInstance()->single();
 
-          return new Article($article['id'], $article['title'], $article['content'],
-              $article['catagory'], $article['importance'], $article['date'], $article['source']);
+          return new Article($article->id, $article->title, $article->content,
+              $article->catagory, $article->importance, $article->date, $article->source);
     }
 
     // Add Post

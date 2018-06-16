@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Created by PhpStorm.
+ * User: MY
+ * Date: 6/16/2018
+ * Time: 12:26 AM
+ */
 class Database
 {
     private static $ins = null;
@@ -98,77 +104,71 @@ class Database
         return $this->dbh->lastInsertId();
     }
 }
-class Forum
-{
-    public $id;
-    public $title;
-    public $catagory;
-    private $thoughts;
 
-    // private $db;    
-    public function __construct(){
+include('Entertaimentproduct.php');
+
+class Music extends EntertaimentProduct
+{
+    public $singer;
+    public $producer;
+
+    public function __construct($id, $title, $singer, $len, $date, $producer, $rate = 1, $reviews = [])
+    {
         $this->id = $id;
         $this->title = $title;
-        $this->content = $content;
-        $this->thoughts = [];
-//       $this->db =Database::getInstance();
+        $this->singer = $singer;
+        $this->length = $len;
+        $this->releaseDate = $date;
+        $this->producer = $producer;
+        $this->rate = $rate;
+        $this->reviews = $reviews;
     }
 
-    // add a thought to a forum
-    public function addThought($data)
+    public function updateRate($data)
     {
-        //implementation based on database..
-        // foreach ($participant as )
-        // $this.$this->thoughts[$participant]=$comment;
     }
 
-    // Update a Forum
-    public function updateForum($data)
+    public function getRate()
     {
-        // Prepare Query
-        Database::getInstance()->query("UPDATE `forums` SET `title` = ':title' WHERE `forums`.`id` = :id;");
+        // TODO: Implement getRate() method.
+    }
 
-        // Bind Values
-        Database::getInstance()->bind(':id', $data['id']);
-        Database::getInstance()->bind(':title', $data['title']);
-        Database::getInstance()->bind(':body', $data['body']);
+    public function addReview($data)
+    {
+        // TODO: Implement addReview() method.
+    }
 
-        //Execute
-        if (Database::getInstance()->execute()) {
-            return true;
-        } else {
-            return false;
+    public function getReviews($data)
+    {
+        // TODO: Implement getReviews() method.
+    }
+
+    public static function getAllProducts()
+    {
+        $list = [];
+        Database::getInstance()->query("SELECT * FROM `musics` ORDER BY `release_date` DESC;");
+        $results = Database::getInstance()->resultset();
+        foreach ($results as $music) {
+            $list[] = new Music($music->id, $music->music_title, $music->singer, $music->length,
+                $music->release_date, $music->producer);
         }
+        return $list;
+
     }
 
-    // Get list of all available fourms
-    public static function getAllForums()
+    public function getRecentProducts()
     {
-        Database::getInstance()->query("SELECT * FROM `forums`;");
-        $results = Database::getInstance()->resultset();
-      return $results;
+        // TODO: Implement getRecentProducts() method.
     }
 
-    //get list of  fourms with limited number
-    public static function getRecentForums($limit = 10)
+    public function addProduct($data)
     {
-        Database::getInstance()->query("SELECT * FROM `forums` ORDER BY `date` DESC LIMIT :lim");
-        Database::getInstance()->bind(':lim', $limit);
-        $results = Database::getInstance()->resultset();
-      return $results;
+        // TODO: Implement addProduct() method.
     }
-    // Get Post By title
-    public static function getForum($data)
-    {
-        Database::getInstance()->query("SELECT * FROM `forums` WHERE title = :title");
-        Database::getInstance()->bind(':title', $data['title']);
-        $row = Database::getInstance()->single();
-      return $row;
-    }
-
 }
-
-$a = Forum::getAllForums();
-foreach ($a as $i) {
-    echo $i->title . '<br>';
-}
+/*
+$ms=Music::getAllProducts();
+    foreach ($ms as $mus){
+        echo $mus->title;
+    }
+*/

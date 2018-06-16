@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Created by PhpStorm.
+ * User: MY
+ * Date: 6/15/2018
+ * Time: 11:59 PM
+ */
 class Database
 {
     private static $ins = null;
@@ -99,104 +105,75 @@ class Database
     }
 }
 
-class User
+class Cinema
 {
+    public $id;
     public $name;
-    public $username;
-    public $email;
-    protected $password;
+    public $location;
 
 //    private $db;
 
-    public function __construct($uname = null, $pwd = null, $email = null, $name = null)
+    public function __construct($id = null, $name = null, $loc = null)
     {
-        $this->username = $uname;
-        $this->password = $pwd;
-        $this->email = $email;
+        $this->id = $id;
         $this->name = $name;
+        $this->location = $loc;
 
 //      $this->db = new Database;
     }
 
-    public function getPassord()
+    // Get All Articles
+    public static function getAllCinemas()
     {
-        return $this->password;
+        $list = [];
+        Database::getInstance()->query("SELECT * FROM `cinemas`;");
+        $results = Database::getInstance()->resultset();
+        foreach ($results as $cinema) {
+            $list[] = new Cinema($cinema->id, $cinema->name, $cinema->location);
+        }
+        return $list;
+
     }
 
-    public function setPassword($pwd)
+    // Add Cinema / Register
+    public function addCinema($data)
     {
-        $this->password = $pwd;
-    }
+        // Prepare Query
+        Database::getInstance()->query('INSERT INTO cinemas (name,location) VALUES(:name, :location)');
 
-    // Add User / Register
-    public function addUser($data)
-    {
-      // Prepare Query
-        Database::getInstance()->query('INSERT INTO users (name, email,password) 
-      VALUES (:name, :email, :password)');
-
-      // Bind Values
+        // Bind Values
         Database::getInstance()->bind(':name', $data['name']);
-        Database::getInstance()->bind(':email', $data['email']);
-        Database::getInstance()->bind(':password', $data['password']);
-      
-      //Execute
+        Database::getInstance()->bind(':location', $data['location']);
+
+        //Execute
         if (Database::getInstance()->execute()) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    // Find User by Email
-    public function findUserByEmail($email){
-        Database::getInstance()->query("SELECT * FROM users WHERE email = :email");
-        Database::getInstance()->bind(':email', $email);
-
-        $row = Database::getInstance()->single();
-
-      //Check Rows
-        if (Database::getInstance()->rowCount() > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    // Login / Authenticate User
-    public function verify($data)
-    {
-        Database::getInstance()->query("SELECT * FROM users WHERE username = :uname");
-        Database::getInstance()->bind(':uname', $data['username']);
-
-        $row = Database::getInstance()->single();
-
-//      $hashed_password = $row->password;
-//      password_verify($password, $hashed_password);
-        if (isset($row->username)) {
             return true;
-      } else {
-        return false;
-      }
+        } else {
+            return false;
+        }
     }
 
-    //gets the type of the user
-    public function authenticateUser($data)
+    // Find cinema by name
+    public function getCinemaByName($data)
     {
-        Database::getInstance()->query("SELECT * FROM `users` WHERE `username` = :uname AND `password` = :pwd");
-        Database::getInstance()->bind(':uname', $data['username']);
-        Database::getInstance()->bind(':pwd', $data['password']);
+        Database::getInstance()->query("SELECT * FROM cinemas WHERE cinemas.name = :name");
+        Database::getInstance()->bind(':name', $data['name']);
 
         $row = Database::getInstance()->single();
 
-        $ut = $row->userType;
-        return $ut;
+        //Check Rows
+        if (Database::getInstance()->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    // Find User By ID
-    public function getUserById($id){
-        Database::getInstance()->query("SELECT * FROM users WHERE id = :id");
-        Database::getInstance()->bind(':id', $id);
+    // Find cinema by ID
+    public function getCinemaById($data)
+    {
+        Database::getInstance()->query("SELECT * FROM cinemas WHERE id = :id");
+        Database::getInstance()->bind(':id', $data['id']);
 
         $row = Database::getInstance()->single();
 
@@ -205,11 +182,8 @@ class User
 
 }
 /*
-$u=new User("dawit","test123");
-$f = $u->verify(["username"=>"dawit","password"=>"test123"]);
-if($f){
-  echo 'pases';
-}else{
-  echo 'dont pass';
+$cl=Cinema::getAllCinemas();
+foreach ($cl as $cin){
+    echo $cin->name.'<br>';
 }
 */

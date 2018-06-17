@@ -3,9 +3,10 @@
   <br>
   <h1><?php echo $data['post']->title; ?></h1>
   <div class="bg-secondary text-white p-2 mb-3">
-    Written by <?php echo $data['user']->name; ?> on <?php echo $data['post']->created_at; ?>
+      <!--    Written by --><?php //echo $data['user']->importance; ?><!-- on -->
+      <?php //echo $data['post']->source; ?>
   </div>
-  <p><?php echo $data['post']->body; ?></p>
+    <p><?php echo $data['post']->content; ?></p>
   <?php if($data['post']->user_id == $_SESSION['user_id']) : ?>
     <hr>
     <a class="btn btn-dark" href="<?php echo URLROOT; ?>/posts/edit/<?php echo $data['post']->id; ?>">Edit</a>

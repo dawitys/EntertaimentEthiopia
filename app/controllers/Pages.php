@@ -8,10 +8,11 @@
     public function index(){
       // If logged in, redirect to posts
       if(isset($_SESSION['user_id'])){
-        redirect('posts');
+          redirect('pages');
       }
 
-      //Set Data
+
+        //Set Data
       $data = [
         'title' => 'Welcome To SharePosts',
         'description' => 'Simple social network built on the TraversyMVC PHP framework'

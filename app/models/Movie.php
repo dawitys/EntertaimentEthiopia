@@ -6,42 +6,84 @@
  * Time: 12:26 AM
  */
 
-include('Entertaimentproduct.php')
+include('Entertaimentproduct.php');
+
 class Movie extends EntertaimentProduct
 {
+    public $cast;
+    public $director;
+
+    public function __construct()
+    {
+
+    }
 
     public function updateRate($data)
     {
-
+        //code...
     }
 
     public function getRate()
     {
-        // TODO: Implement getRate() method.
+        //code..
     }
 
     public function addReview($data)
     {
-        // TODO: Implement addReview() method.
+        // code..
     }
 
     public function getReviews($data)
     {
-        // TODO: Implement getReviews() method.
+        // code..
     }
 
-    public function getAllProducts()
+    public static function getAllProducts()
     {
-        // TODO: Implement getAllProducts() method.
+        $list = [];
+        Database::getInstance()->query("SELECT * FROM `movies` ORDER BY `release_date` DESC;");
+        $results = Database::getInstance()->resultset();
+        foreach ($results as $movie) {
+            $list[] = new Music($movie->id, $movie->title, $movie->singer, $movie->length,
+                $movie->release_date, $movie->producer);
+        }
+        return $list;
     }
 
-    public function getRecentProducts()
+    public static function getRecentProducts($data = ['limit' => 3])
     {
-        // TODO: Implement getRecentProducts() method.
+        $list = [];
+        Database::getInstance()->query("SELECT * FROM `movies` ORDER BY `release_date` DESC LIMIT :lim;");
+        Database::getInstance()->bind(':lim', $data['limit']);
+        $results = Database::getInstance()->resultset();
+        foreach ($results as $movie) {
+            $list[] = new Music($movie->id, $movie->title, $movie->singer, $movie->length,
+                $movie->release_date, $movie->producer);
+        }
+        return $list;
     }
 
-    public function addProduct($data)
+    public function postProduct($data)
     {
-        // TODO: Implement addProduct() method.
+        // Prepare Query
+        Database::getInstance()->query("INSERT INTO `movies`( `movie_title`, `length`, `release_date`, `producer`, `cast`) VALUES (:title, :len, NOW(), :producer, :cast);");
+
+        // Bind Values
+        Database::getInstance()->bind(':title', $data['title']);
+        Database::getInstance()->bind(':len', $data['length']);
+//        Database::getInstance()->bind(':date', $data['date']);
+        Database::getInstance()->bind(':producer', $data['producer']);
+        Database::getInstance()->bind(':cast', $data['cast']);
+
+        //Execute
+        if (Database::getInstance()->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
 }
+
+//$t=new Movie();
+//echo $t->postProduct(['title'=>"TEST FROm PHP222222",'producer'=>"Dawddfit Yonas",'cast'=>"Amf fsdhfss d ,f df,adfgfb",'length'=>65.00]);

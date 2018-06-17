@@ -6,7 +6,7 @@
    */
   class Core {
     // Set Defaults
-    protected $currentController = 'Pages'; // Default controller
+      protected $currentController = 'posts'; // Default controller
     protected $currentMethod = 'index'; // Default method
     protected $params = []; // Set initial empty params array
 

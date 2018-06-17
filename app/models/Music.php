@@ -1,109 +1,10 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: MY
  * Date: 6/16/2018
  * Time: 12:26 AM
  */
-class Database
-{
-    private static $ins = null;
-
-    private static $host = "localhost";
-    private static $user = "root";
-    private static $pass = "";
-    private static $dbname = "entertaiment_ethiopia";
-
-    private static $dbh;
-    private $error;
-    private $stmt;
-
-    public static function getInstance()
-    {
-        if (self::$ins == null) {
-            self::$ins = new Database;
-        }
-        return self::$ins;
-    }
-
-    public function __construct()
-    {
-        // Set DSN
-        $dsn = 'mysql:host=' . self::$host . ';dbname=' . self::$dbname;
-        $options = array(
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        );
-
-        // Create a new PDO instanace
-        try {
-            self::$dbh = new PDO ($dsn, self::$user, self::$pass, $options);
-        }        // Catch any errors
-        catch (PDOException $e) {
-            $this->error = $e->getMessage();
-        }
-    }
-
-    // Prepare statement with query
-    public function query($query)
-    {
-        $this->stmt = self::$dbh->prepare($query);
-    }
-
-    // Bind values
-    public function bind($param, $value, $type = null)
-    {
-        if (is_null($type)) {
-            switch (true) {
-                case is_int($value) :
-                    $type = PDO::PARAM_INT;
-                    break;
-                case is_bool($value) :
-                    $type = PDO::PARAM_BOOL;
-                    break;
-                case is_null($value) :
-                    $type = PDO::PARAM_NULL;
-                    break;
-                default :
-                    $type = PDO::PARAM_STR;
-            }
-        }
-        $this->stmt->bindValue($param, $value, $type);
-    }
-
-    // Execute the prepared statement
-    public function execute()
-    {
-        return $this->stmt->execute();
-    }
-
-    // Get result set as array of objects
-    public function resultset()
-    {
-        $this->execute();
-        return $this->stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    // Get single record as object
-    public function single()
-    {
-        $this->execute();
-        return $this->stmt->fetch(PDO::FETCH_OBJ);
-    }
-
-    // Get record row count
-    public function rowCount()
-    {
-        return $this->stmt->rowCount();
-    }
-
-    // Returns the last inserted ID
-    public function lastInsertId()
-    {
-        return $this->dbh->lastInsertId();
-    }
-}
 
 include('Entertaimentproduct.php');
 
@@ -112,7 +13,7 @@ class Music extends EntertaimentProduct
     public $singer;
     public $producer;
 
-    public function __construct($id, $title, $singer, $len, $date, $producer, $rate = 1, $reviews = [])
+    public function __construct($id = null, $title = null, $singer = null, $len = null, $date = null, $producer = null, $rate = 1, $reviews = [])
     {
         $this->id = $id;
         $this->title = $title;
@@ -130,45 +31,72 @@ class Music extends EntertaimentProduct
 
     public function getRate()
     {
-        // TODO: Implement getRate() method.
+
     }
 
     public function addReview($data)
     {
-        // TODO: Implement addReview() method.
+        //code..
     }
 
     public function getReviews($data)
     {
-        // TODO: Implement getReviews() method.
+        //code..
     }
 
     public static function getAllProducts()
     {
         $list = [];
-        Database::getInstance()->query("SELECT * FROM `musics` ORDER BY `release_date` DESC;");
+        Database::getInstance()->query("SELECT * FROM `musics` ORDER BY `release_date` ASC;");
         $results = Database::getInstance()->resultset();
         foreach ($results as $music) {
             $list[] = new Music($music->id, $music->music_title, $music->singer, $music->length,
                 $music->release_date, $music->producer);
         }
         return $list;
-
     }
 
-    public function getRecentProducts()
+    public static function getRecentProducts($data = ['limit' => 1])
     {
-        // TODO: Implement getRecentProducts() method.
+        $list = [];
+        Database::getInstance()->query("SELECT * FROM `musics` ORDER BY `release_date` DESC LIMIT :lim;");
+        Database::getInstance()->bind(':lim', $data['limit']);
+        $results = Database::getInstance()->resultset();
+        foreach ($results as $music) {
+            $list[] = new Music($music->id, $music->music_title, $music->singer, $music->length,
+                $music->release_date, $music->producer);
+        }
+        return $list;
     }
 
-    public function addProduct($data)
+    public function postProduct($data)
     {
-        // TODO: Implement addProduct() method.
+        // Prepare Query
+        Database::getInstance()->query("INSERT INTO `musics`( `music_title`,`singer`, `length`, `release_date`, `producer`) VALUES (:title,:singer, :len, NOW(), :producer);");
+
+        // Bind Values
+        Database::getInstance()->bind(':title', $data['title']);
+        Database::getInstance()->bind(':len', $data['length']);
+//        Database::getInstance()->bind(':date', $data['date']);
+        Database::getInstance()->bind(':producer', $data['producer']);
+        Database::getInstance()->bind(':singer', $data['singer']);
+
+        //Execute
+        if (Database::getInstance()->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
 }
 /*
-$ms=Music::getAllProducts();
-    foreach ($ms as $mus){
-        echo $mus->title;
-    }
+$t=new Music();
+echo $t->postProduct(['title'=>"TEST FROm PHP",'producer'=>"Dawit Yonas",'singer'=>"asdg",'length'=>4.00]);
+
+$ms=Music::getRecentProducts();
+foreach ($ms as $mus){
+    echo $mus->title;
+}
 */
+

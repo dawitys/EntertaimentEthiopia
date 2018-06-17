@@ -10,7 +10,13 @@
           <a class="nav-link" href="<?php echo URLROOT; ?>">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?php echo URLROOT; ?>/pages/about">About</a>
+            <a class="nav-link" href="<?php echo URLROOT; ?>/pages/cinemas">Cinemas</a>
+        </li>
+          <li class="nav-item">
+              <a class="nav-link" href="<?php echo URLROOT; ?>/pages/movies">Movies</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="<?php echo URLROOT; ?>/pages/musics">Musics</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">

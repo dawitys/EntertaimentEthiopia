@@ -1,104 +1,7 @@
 <?php
 
-class Database
+class Article
 {
-    private static $ins = null;
-
-    private static $host = "localhost";
-    private static $user = "root";
-    private static $pass = "";
-    private static $dbname = "entertaiment_ethiopia";
-
-    private static $dbh;
-    private $error;
-    private $stmt;
-
-    public static function getInstance()
-    {
-        if (self::$ins == null) {
-            self::$ins = new Database;
-        }
-        return self::$ins;
-    }
-
-    public function __construct()
-    {
-        // Set DSN
-        $dsn = 'mysql:host=' . self::$host . ';dbname=' . self::$dbname;
-        $options = array(
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        );
-
-        // Create a new PDO instanace
-        try {
-            self::$dbh = new PDO ($dsn, self::$user, self::$pass, $options);
-        }        // Catch any errors
-        catch (PDOException $e) {
-            $this->error = $e->getMessage();
-        }
-    }
-
-    // Prepare statement with query
-    public function query($query)
-    {
-        $this->stmt = self::$dbh->prepare($query);
-    }
-
-    // Bind values
-    public function bind($param, $value, $type = null)
-    {
-        if (is_null($type)) {
-            switch (true) {
-                case is_int($value) :
-                    $type = PDO::PARAM_INT;
-                    break;
-                case is_bool($value) :
-                    $type = PDO::PARAM_BOOL;
-                    break;
-                case is_null($value) :
-                    $type = PDO::PARAM_NULL;
-                    break;
-                default :
-                    $type = PDO::PARAM_STR;
-            }
-        }
-        $this->stmt->bindValue($param, $value, $type);
-    }
-
-    // Execute the prepared statement
-    public function execute()
-    {
-        return $this->stmt->execute();
-    }
-
-    // Get result set as array of objects
-    public function resultset()
-    {
-        $this->execute();
-        return $this->stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    // Get single record as object
-    public function single()
-    {
-        $this->execute();
-        return $this->stmt->fetch(PDO::FETCH_OBJ);
-    }
-
-    // Get record row count
-    public function rowCount()
-    {
-        return $this->stmt->rowCount();
-    }
-
-    // Returns the last inserted ID
-    public function lastInsertId()
-    {
-        return $this->dbh->lastInsertId();
-    }
-}
-  class Article {
       public $id;
       public $title;
       public $content;
@@ -106,11 +9,11 @@ class Database
       public $importance;
       public $releaseDate;
       public $source;
+    public $image;
 
-      // private static $db;
 
-      public function __construct($id = null, $title = null, $content = null, $catagory = null, $importance = 1, $releaseDate = null, $source = null)
-      {
+    public function __construct($id = null, $title = null, $content = null, $catagory = null, $importance = 1, $releaseDate = null, $source = null, $image = null)
+    {
           $this->id = $id;
           $this->title = $title;
           $this->content = $content;
@@ -118,34 +21,32 @@ class Database
           $this->importance = $importance;
           $this->releaseDate = $releaseDate;
           $this->source = $source;
-
-//      Database::getInstance()= Database::getInstance();
-//          echo "created Article";
+        $this->image = $image;
       }
 
     // Get All Articles
-      public static function getAllArticles()
-      {
-          $list = [];
-          Database::getInstance()->query("SELECT * FROM `articles` ORDER BY `date` DESC;");
-          $results = Database::getInstance()->resultset();
-          foreach ($results as $article) {
-              $list[] = new Article($article->id, $article->title, $article->content,
-                  $article->catagory, $article->importance, $article->date, $article->source);
-          }
-          return $list;
+    public static function getAllArticles()
+    {
+        $list = [];
+        Database::getInstance()->query("SELECT * FROM `articles` ORDER BY `date` DESC;");
+        $results = Database::getInstance()->resultset();
+        foreach ($results as $article) {
+            $list[] = new Article($article->id, $article->title, $article->content,
+                $article->catagory, $article->importance, $article->date, $article->source, $article->image);
+        }
+        return $list;
 
     }
 
     // Get Post By ID
-      public static function getArticle($data)
-      {
-          Database::getInstance()->query("SELECT * FROM `articles` WHERE title = :title");
-          Database::getInstance()->bind(':title', $data['title']);
+    public static function getArticleById($data)
+    {
+        Database::getInstance()->query("SELECT * FROM `articles` WHERE id = :title");
+        Database::getInstance()->bind(':title', $data);
           $article = Database::getInstance()->single();
 
           return new Article($article->id, $article->title, $article->content,
-              $article->catagory, $article->importance, $article->date, $article->source);
+              $article->catagory, $article->importance, $article->date, $article->source, $article->image);
     }
 
     // Add Post
@@ -188,8 +89,8 @@ class Database
     }
 
     // Delete Post
-      public function deleteArticle($data)
-      {
+    public function deleteArticle($data)
+    {
       // Prepare Query
           Database::getInstance()->query('DELETE FROM `articles` WHERE id = :id');
 
@@ -205,8 +106,4 @@ class Database
     }
   }
 
-$a = Article::getAllArticles();
-foreach ($a as $i) {
-    echo $i->title . '<br>';
-}
 

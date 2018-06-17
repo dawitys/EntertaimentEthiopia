@@ -1,17 +1,17 @@
 <?php
   class Posts extends Controller{
     public function __construct(){
-      if(!isset($_SESSION['user_id'])){
-        redirect('users/login');
-      }
+//      if(!isset($_SESSION['user_id'])){
+//        redirect('users/login');
+//      }
       // Load Models
-      $this->postModel = $this->model('Post');
+        $this->postModel = $this->model('Article');
       $this->userModel = $this->model('User');
     }
 
     // Load All Posts
     public function index(){
-      $posts = $this->postModel->getPosts();
+        $posts = $this->postModel::getAllArticles();
 
       $data = [
         'posts' => $posts
@@ -22,12 +22,12 @@
 
     // Show Single Post
     public function show($id){
-      $post = $this->postModel->getPostById($id);
-      $user = $this->userModel->getUserById($post->user_id);
+        $post = $this->postModel->getArticleById($id);
+//      $user = $this->userModel->getUserById($post->user_id);
 
       $data = [
-        'post' => $post, 
-        'user' => $user
+          'post' => $post
+//        'user' => $user
       ];
 
       $this->view('posts/show', $data);

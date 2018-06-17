@@ -1,0 +1,77 @@
+/*!
+ * Start Bootstrap - 4 Col Portfolio (https://startbootstrap.com/template-overviews/4-col-portfolio)
+ * Copyright 2013-2018 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-4-col-portfolio/blob/master/LICENSE)
+ */
+
+body {
+    padding-top: 54px;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 56px;
+    }
+}
+
+.portfolio-item {
+    margin-bottom: 30px;
+}
+
+.pagination {
+    margin-bottom: 30px;
+}
+
+.hh-100 .card-img-top {
+    height: 250px;
+}
+
+smm {
+    font-size: 0.5rem;
+}
+
+small {
+    font-size: 1rem;
+}
+
+titlee {
+    float: left;
+}
+
+.movinfo {
+    float: right;
+    margin-left: 5%;
+    margin-bottom: 0rem;
+}
+
+.card-title {
+    font-size: 1.125rem;
+}
+
+.mbody {
+    padding: 0.1rem 0.5rem;
+}
+
+#movimage {
+    height: 400px;
+    width: all;
+}
+
+.coontainer {
+    padding: 1rem 1rem;
+}
+
+#spanrate .btn {
+    padding: 0 10px;
+    padding-bottom: 3px;
+}
+
+.musicp {
+    margin-bottom: 0px;
+}
+
+.commentparagrah {
+    background-color: bisque;
+    border: 2px solid wheat;
+    border-radius: 5px;
+}

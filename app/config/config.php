@@ -8,7 +8,7 @@ define("DB_NAME", "entertaiment_ethiopia");
   // App Root
   define('APPROOT', dirname(dirname(__FILE__)));
   // URL Root
-  define('URLROOT', 'http://localhost/shareposts');
+define('URLROOT', 'http://localhost/EntertaimentEthiopia');
   // Site Name
-  define('SITENAME', 'SharePosts');
+define('SITENAME', 'Entertaiment Ethiopia');
   

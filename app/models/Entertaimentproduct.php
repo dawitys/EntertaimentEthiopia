@@ -27,8 +27,8 @@ abstract class EntertaimentProduct
 
     abstract public static function getAllProducts();
 
-    abstract public function getRecentProducts();
+    abstract public static function getRecentProducts($data);
 
-    abstract public function addProduct($data);
+    abstract public function postProduct($data);
 
 }
